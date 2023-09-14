@@ -1,5 +1,6 @@
 const readlineSync = require("readline-sync");
 const crypto = require("crypto");
+const fs = require("fs");
 
 class Record {
   constructor(title, artist, year, recordLabel) {
@@ -8,6 +9,31 @@ class Record {
     this.artist = artist;
     this.year = year;
     this.recordLabel = recordLabel;
+  }
+}
+
+class FileManager {
+  static appendRecord(data) {
+    try {
+      fs.writeFileSync("./records.json", JSON.stringify(data), {
+        encoding: "utf8",
+      });
+      console.log("Record added to file");
+    } catch (err) {
+      console.log("Unexpected Error:", err);
+    }
+    // Pause to display success message
+    readlineSync.keyInPause("\n");
+  }
+  static readRecords() {
+    try {
+      const records = fs.readFileSync("./records.json", { encoding: "utf-8" });
+      return JSON.parse(records);
+    } catch (err) {
+      console.log("Unexpected Error:", err);
+    }
+    // Pause to display success message
+    readlineSync.keyInPause("\n");
   }
 }
 
@@ -22,14 +48,15 @@ class RecordManager {
     const year = readlineSync.question("Enter year: ");
     const recordLabel = readlineSync.question("Enter record label: ");
 
-    const record = new Record(title, artist, year, recordLabel);
-    this.records.push(record);
-    console.log("Record created successfully.\n");
-    // Pause to display success message
-    readlineSync.keyInPause("\n");
+    const newRecord = new Record(title, artist, year, recordLabel);
+    this.records.push(newRecord);
+    FileManager.appendRecord(this.records);
   }
 
   readRecords() {
+    const readResult = FileManager.readRecords();
+    console.log(readResult);
+    this.records = readResult;
     console.log("===== Records =====\n");
     if (this.records.length === 0) {
       console.log("No records found.\n");
@@ -74,7 +101,14 @@ class RecordManager {
         "record label",
         recordToUpdate.recordLabel
       );
-
+      const updatedRecord = {
+        title,
+        artist,
+        year,
+        recordLabel,
+      };
+      this.records.splice(recordToUpdate, 1);
+      FileManager.appendRecord(this.records);
       console.log("Record updated successfully.\n");
     }
 
