@@ -92,11 +92,27 @@ class RecordManager {
     );
 
     if (recordIndex !== -1) {
-      this.records.splice(recordIndex, 0);
+      const recordToDelete = this.records[recordIndex]; // Capture the record to be deleted
+
+      const confirmation = readlineSync.keyInYN(
+        `Do you want to delete the record: ${recordToDelete.title} by ${recordToDelete.artist}? (Y/N) 
+      //`
+      );
+      if (confirmation) {
+        // User confirmed, so delete the record
+        this.records.splice(recordIndex, 1);
+        console.log("Record deleted successfully.\n");
+        console.log(
+          `Deleted Record: ${recordToDelete.title} by ${recordToDelete.artist}`
+        );
+      } else {
+        console.log("Deletion canceled. Record not removed.\n");
+      }
     } else {
       console.log("Record not found.\n");
     }
-    // Pause to display success message
+
+    // Pause to display the result
     readlineSync.keyInPause("\n");
   }
 
