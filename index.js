@@ -18,9 +18,9 @@ class FileManager {
       fs.writeFileSync("./records.json", JSON.stringify(data), {
         encoding: "utf8",
       });
-      console.log("Record added to file");
+      console.log("Operation completed!\n");
     } catch (err) {
-      console.log("Unexpected Error:", err);
+      console.log(`Unexpected Error: ${err} \n`);
     }
     // Pause to display success message
     readlineSync.keyInPause("\n");
@@ -101,19 +101,9 @@ class RecordManager {
         "record label",
         recordToUpdate.recordLabel
       );
-      const updatedRecord = {
-        title,
-        artist,
-        year,
-        recordLabel,
-      };
-      this.records.splice(recordToUpdate, 1);
-      FileManager.appendRecord(this.records);
-      console.log("Record updated successfully.\n");
-    }
 
-    // Pause to display success message
-    readlineSync.keyInPause("\n");
+      FileManager.appendRecord(this.records);
+    }
   }
 
   deleteRecord() {
@@ -135,10 +125,7 @@ class RecordManager {
       if (confirmation) {
         // User confirmed, so delete the record
         this.records.splice(recordIndex, 1);
-        console.log("Record deleted successfully.\n");
-        console.log(
-          `Deleted Record: ${recordToDelete.title} by ${recordToDelete.artist}`
-        );
+        FileManager.appendRecord(this.records);
       } else {
         console.log("Deletion canceled. Record not removed.\n");
       }
