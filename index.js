@@ -59,8 +59,27 @@ class RecordManager {
     if (!recordToUpdate) {
       console.log("Record not found.\n");
     } else {
-      // Implement record updating logic here
+      // Helper function to update a field or keep the previous value
+      function updateField(fieldName, currentValue) {
+        const newValue = readlineSync.question(
+          `Enter new ${fieldName} (${currentValue}): `
+        );
+        return newValue.trim() ? newValue : currentValue;
+      }
+
+      recordToUpdate.title = updateField("title", recordToUpdate.title);
+      recordToUpdate.artist = updateField("artist", recordToUpdate.artist);
+      recordToUpdate.year = updateField("year", recordToUpdate.year);
+      recordToUpdate.recordLabel = updateField(
+        "record label",
+        recordToUpdate.recordLabel
+      );
+
+      console.log("Record updated successfully.\n");
     }
+
+    // Pause to display success message
+    readlineSync.keyInPause("\n");
   }
 
   deleteRecord() {
@@ -73,10 +92,12 @@ class RecordManager {
     );
 
     if (recordIndex !== -1) {
-      // Implement record deletion logic here
+      this.records.splice(recordIndex, 0);
     } else {
       console.log("Record not found.\n");
     }
+    // Pause to display success message
+    readlineSync.keyInPause("\n");
   }
 
   start() {
