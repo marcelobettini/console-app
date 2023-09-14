@@ -25,10 +25,11 @@ class RecordManager {
     const record = new Record(title, artist, year, recordLabel);
     this.records.push(record);
     console.log("Record created successfully.\n");
+    // Pause to display success message
+    readlineSync.keyInPause("\n");
   }
 
   readRecords() {
-    console.log(this.records);
     console.log("===== Records =====\n");
     if (this.records.length === 0) {
       console.log("No records found.\n");
@@ -42,6 +43,8 @@ class RecordManager {
         console.log("---\n");
       });
     }
+    // Pause to display success message
+    readlineSync.keyInPause("\n");
   }
 
   updateRecord() {
